@@ -29,53 +29,42 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  async login({ commit }, userInfo) {
+    // 解构用户名和密码
     const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+
+    let result = await login({ username: username.trim(), password: password });
+    // 失败
+    if (result.code !== 20000) return Promise.reject(new Error('fail'));
+
+    commit('SET_TOKEN', result.data.token)
+    setToken(result.data.token);
+    return 'ok';
+
   },
 
   // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+  async getInfo({ commit, state }) {
+    let result = await getInfo(state.token);
 
-        if (!data) {
-          return reject('Verification failed, please Login again.')
-        }
+    if (result.code !== 20000) return Promise(new Error('fail'));
+    if (!result.data) return Promise(new Error('获取数据失败，请重新再试'));
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    commit('SET_NAME', result.data.name);
+    commit('SET_AVATAR', result.data.avatar);
+    return 'ok';
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+  async logout({ commit, state }) {
+
+    let result = await logout(state.token);
+    if (result.code !== 20000) return Promise(new Error('fail'));
+
+    removeToken(); // 必须先移除token
+    resetRouter();
+    commit('RESET_STATE');
+    return 'ok';
   },
 
   // remove token
