@@ -38,9 +38,13 @@ module.exports = {
     },
     // 配置代理跨域
     proxy: {
-      '/dev-api': {
+      '/acl': {
         target: 'http://39.98.123.211:8170',
-        pathRewrite: { '^/dev-api': '' },
+        pathRewrite: { '^/acl': '' },
+      },
+      'product': {
+        target: 'http://39.98.123.211:8510',
+        // pathRewrite: { '^/admin/product': '' },
       },
     },
     // before: require('./mock/mock-server.js')
