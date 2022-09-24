@@ -110,7 +110,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="addOrUpdateSpu">保存</el-button>
-                <el-button @click="$emit('changeScene',0);clearInput();">取消</el-button>
+                <el-button @click="cancel">取消</el-button>
             </el-form-item>
         </el-form>
 
@@ -259,18 +259,19 @@ export default {
         },
         // 保存或取消后清除输入框
         clearInput() {
-            this.spu = {
-                category3Id: 0,             //三级分类id
-                description: '',            //描述
-                tmId: '',                    //品牌id
-                spuName: '',                //spu名称
-                spuImageList: [],
-                spuSaleAttrList: [],
-            };
-            this.tradeMarkList = [];//品牌信息
-            this.spuImageList = [];//spu图片
-            this.saleAttrList = [];//销售属性
-            this.attrId = '';   //未选择属性id
+            // this.spu = {
+            //     category3Id: 0,             //三级分类id
+            //     description: '',            //描述
+            //     tmId: '',                    //品牌id
+            //     spuName: '',                //spu名称
+            //     spuImageList: [],
+            //     spuSaleAttrList: [],
+            // };
+            // this.tradeMarkList = [];//品牌信息
+            // this.spuImageList = [];//spu图片
+            // this.saleAttrList = [];//销售属性
+            // this.attrId = '';   //未选择属性id
+            Object.assign(this.$data, this.$options.data());
         },
         // 保存按钮回调
         async addOrUpdateSpu() {
@@ -281,9 +282,31 @@ export default {
             if (result.code !== 200) return this.$message('fail');
             this.$message({ type: 'success', message: '保存成功' });
             // 通知父组件
-            this.$emit('changeScene', 0);
+            this.$emit('changeScene', { scene: 0, flag: this.spu.id ? '修改' : '添加' });
             this.clearInput();
+        },
+        // 点击添加spu按钮时，发送的函数
+        async addSpuData(category3Id) {
+            this.spu.category3Id = category3Id;
+            // 获取品牌信息
+            const tradeMarkList = await this.$API.spu.reqTradeMarkList();
+            if (tradeMarkList.code !== 200) return;
+            this.tradeMarkList = tradeMarkList.data;
+
+            // spu销售属性
+            const saleResult = await this.$API.spu.reqBaseSaleAttrList();
+            if (saleResult.code !== 200) return;
+            this.saleAttrList = saleResult.data;
+
+        },
+        // 取消按钮回调
+        cancel() {
+            // console.log(this._data, this.$options.data());
+            this.$emit('changeScene', { scene: 0, flag: '' });
+            this.clearInput();
+
         }
+
 
     }
 }
