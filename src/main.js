@@ -45,6 +45,11 @@ Vue.component(CategorySelect.name, CategorySelect);
 import HintButton from '@/components/hintButton';
 Vue.component(HintButton.name, HintButton);
 
+// 引入echarts
+import * as echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
+
+
 new Vue({
   el: '#app',
   router,
