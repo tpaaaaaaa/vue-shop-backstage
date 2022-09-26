@@ -34,21 +34,21 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.config.devtools = true;
 
 // 引入API相关请求接口
-import API from '@/api';
+import API from '@/api'
 // 任意组件可以使用API相关文件
-Vue.prototype.$API = API;
-import CategorySelect from '@/components/CategorySelect';
+Vue.prototype.$API = API
+import CategorySelect from '@/components/CategorySelect'
 // 注册全局组件
-Vue.component(CategorySelect.name, CategorySelect);
-import HintButton from '@/components/hintButton';
-Vue.component(HintButton.name, HintButton);
+Vue.component(CategorySelect.name, CategorySelect)
+import HintButton from '@/components/hintButton'
+Vue.component(HintButton.name, HintButton)
 
 // 引入echarts
-import * as echarts from 'echarts';
-Vue.prototype.$echarts = echarts;
-
+import * as echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 new Vue({
   el: '#app',

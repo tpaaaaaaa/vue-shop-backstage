@@ -1,12 +1,17 @@
 <template>
   <div class="login-container">
     <!-- el-form：elementUI组件：展示表单元素 -->
-    <!-- 
+    <!--
       //**
       model：表单数据
       rules：验证规则
      */ -->
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on"
+    <el-form
+ref="loginForm"
+:model="loginForm"
+:rules="loginRules"
+class="login-form"
+auto-complete="on"
              label-position="left">
 
       <div class="title-container">
@@ -46,7 +51,10 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+      <el-button
+:loading="loading"
+type="primary"
+style="width:100%;margin-bottom:30px;"
                  @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
@@ -95,7 +103,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function (route) {
+      handler: function(route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true

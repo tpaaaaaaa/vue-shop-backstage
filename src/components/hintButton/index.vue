@@ -6,8 +6,8 @@
 
 <script>
 export default {
-    name: 'HintButton',
-    props: ['title'],
+  name: 'HintButton',
+  props: ['title']
 
 }
 </script>

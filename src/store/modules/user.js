@@ -33,38 +33,36 @@ const actions = {
     // 解构用户名和密码
     const { username, password } = userInfo
 
-    let result = await login({ username: username.trim(), password: password });
+    const result = await login({ username: username.trim(), password: password })
     // 失败
-    if (result.code !== 20000) return Promise.reject(new Error('fail'));
+    if (result.code !== 20000) return Promise.reject(new Error('fail'))
 
     commit('SET_TOKEN', result.data.token)
-    setToken(result.data.token);
-    return 'ok';
-
+    setToken(result.data.token)
+    return 'ok'
   },
 
   // get user info
   async getInfo({ commit, state }) {
-    let result = await getInfo(state.token);
+    const result = await getInfo(state.token)
 
-    if (result.code !== 20000) return Promise(new Error('fail'));
-    if (!result.data) return Promise(new Error('获取数据失败，请重新再试'));
+    if (result.code !== 20000) return Promise(new Error('fail'))
+    if (!result.data) return Promise(new Error('获取数据失败，请重新再试'))
 
-    commit('SET_NAME', result.data.name);
-    commit('SET_AVATAR', result.data.avatar);
-    return 'ok';
+    commit('SET_NAME', result.data.name)
+    commit('SET_AVATAR', result.data.avatar)
+    return 'ok'
   },
 
   // user logout
   async logout({ commit, state }) {
+    const result = await logout(state.token)
+    if (result.code !== 20000) return Promise(new Error('fail'))
 
-    let result = await logout(state.token);
-    if (result.code !== 20000) return Promise(new Error('fail'));
-
-    removeToken(); // 必须先移除token
-    resetRouter();
-    commit('RESET_STATE');
-    return 'ok';
+    removeToken() // 必须先移除token
+    resetRouter()
+    commit('RESET_STATE')
+    return 'ok'
   },
 
   // remove token

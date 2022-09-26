@@ -46,7 +46,8 @@
                        @current-change="getPageList"
                        @size-change="handleSizeChange"
                        :current-page="page"
-                       :total="99" background
+                       :total="99"
+background
                        :page-size="limit"
                        :page-sizes="[3,5,10]"
                        :pager-count="9"
@@ -54,9 +55,9 @@
                        style="margin-top: 20px; text-align: center;">
         </el-pagination>
 
-        <!-- 添加对话框 
+        <!-- 添加对话框
         :visible.sync:控制对话框显示隐藏:true|false
-        
+
         -->
         <el-dialog :title="tmform.id?'修改品牌':'添加品牌'" :visible.sync="dialogFormVisible">
             <!-- from表单
@@ -75,7 +76,10 @@
                                :show-file-list="false"
                                :on-success="handleAvatarSuccess"
                                :before-upload="beforeAvatarUpload">
-                        <img v-if="tmform.logoUrl" :src="tmform.logoUrl" style="height: 100px;width: auto;"
+                        <img
+v-if="tmform.logoUrl"
+:src="tmform.logoUrl"
+style="height: 100px;width: auto;"
                              class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -93,130 +97,129 @@
 
 <script>
 export default {
-    name: 'tradeMark',
-    data() {
-        return {
-            // 当前页
-            page: 1,
-            // 显示数据个数
-            limit: 3,
-            // 数据总数
-            total: 0,
-            // 列表展示数据
-            list: [],
-            // 对话框显示隐藏
-            dialogFormVisible: false,
-            // 品牌信息
-            tmform: {
-                tmName: '',
-                logoUrl: '',
-            },
-            rules: {
-                // 品牌名称验证规则
-                tmName: [
-                    { required: true, message: '请输入品牌名称', trigger: 'blur' },
-                    { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'change' }
-                ],
-                // 品牌logo验证规则
-                logoUrl: [
-                    { required: true, message: '请选择图片' },
-                ],
-            }
+  name: 'TradeMark',
+  data() {
+    return {
+      // 当前页
+      page: 1,
+      // 显示数据个数
+      limit: 3,
+      // 数据总数
+      total: 0,
+      // 列表展示数据
+      list: [],
+      // 对话框显示隐藏
+      dialogFormVisible: false,
+      // 品牌信息
+      tmform: {
+        tmName: '',
+        logoUrl: ''
+      },
+      rules: {
+        // 品牌名称验证规则
+        tmName: [
+          { required: true, message: '请输入品牌名称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'change' }
+        ],
+        // 品牌logo验证规则
+        logoUrl: [
+          { required: true, message: '请选择图片' }
+        ]
+      }
 
-        }
+    }
+  },
+  methods: {
+    // 获取品牌列表
+    async getPageList(pager = 1) {
+      this.page = pager
+      const { page, limit } = this
+      const result = await this.$API.trademark.reqTradeMarkList(page, limit)
+      if (result.code !== 200) return new Promise.reject(new Error('fail'))
+      this.total = result.data.total
+      this.list = result.data.records
+      // console.log(result);
     },
-    methods: {
-        // 获取品牌列表
-        async getPageList(pager = 1) {
-            this.page = pager;
-            let { page, limit } = this;
-            let result = await this.$API.trademark.reqTradeMarkList(page, limit);
-            if (result.code !== 200) return new Promise.reject(new Error('fail'));
-            this.total = result.data.total;
-            this.list = result.data.records;
-            // console.log(result);
-        },
-        // 改变每页数据个数
-        handleSizeChange(limit) {
-            this.limit = limit;
-            this.getPageList();
-        },
-        // 点击添加显示品牌按钮
-        showDialog() {
-            this.dialogFormVisible = !this.dialogFormVisible;
-
-            this.tmform.tmName = '';
-            this.tmform.logoUrl = '';
-        },
-        updateTradeMark(row) {
-            this.dialogFormVisible = !this.dialogFormVisible;
-            this.tmform = { ...row };
-        },
-        // 上传图片相关
-        handleAvatarSuccess(res, file) {
-            this.tmform.logoUrl = res.data;
-        },
-        beforeAvatarUpload(file) {
-            const imageType = ['jpeg', 'jpg', 'png'];
-
-            const isJPG = imageType.find(item => file.type.includes(item)) || false;
-            const isLt2M = file.size / 1024 / 1024 < 2;
-
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            return isJPG && isLt2M;
-        },
-        // 添加或修改品牌
-        addOrUpdateTradeMark() {
-            this.$refs.ruleForm.validate(async (success) => {
-                if (!success) return;
-
-                this.dialogFormVisible = false;
-                let result = await this.$API.trademark.reqAddOrUpdateTradeMark(this.tmform);
-                if (result.code !== 200) return;
-                this.$message({
-                    message: this.tmform.id ? '修改品牌成功' : '添加品牌成功',
-                    type: 'success',
-                });
-                this.getPageList(this.tmform.id ? this.page : 1);
-            }, (error) => {
-                console.log(error);
-                return false;
-            })
-        },
-        deleteTradeMark(row) {
-            console.log(row);
-            this.dialogFormVisible = false;
-            this.$confirm(`此操作将永久删除${row.tmName}, 是否继续?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-                this.$API.trademark.reqDeleteTradeMark(row.id);
-                this.getPageList(this.list.length > 1 ? this.page : this.page - 1);
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
-        }
-
+    // 改变每页数据个数
+    handleSizeChange(limit) {
+      this.limit = limit
+      this.getPageList()
     },
-    // 组件挂在完毕
-    mounted() {
-        // 获取列表数据的方法
-        this.getPageList();
+    // 点击添加显示品牌按钮
+    showDialog() {
+      this.dialogFormVisible = !this.dialogFormVisible
 
+      this.tmform.tmName = ''
+      this.tmform.logoUrl = ''
     },
+    updateTradeMark(row) {
+      this.dialogFormVisible = !this.dialogFormVisible
+      this.tmform = { ...row }
+    },
+    // 上传图片相关
+    handleAvatarSuccess(res, file) {
+      this.tmform.logoUrl = res.data
+    },
+    beforeAvatarUpload(file) {
+      const imageType = ['jpeg', 'jpg', 'png']
+
+      const isJPG = imageType.find(item => file.type.includes(item)) || false
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    // 添加或修改品牌
+    addOrUpdateTradeMark() {
+      this.$refs.ruleForm.validate(async(success) => {
+        if (!success) return
+
+        this.dialogFormVisible = false
+        const result = await this.$API.trademark.reqAddOrUpdateTradeMark(this.tmform)
+        if (result.code !== 200) return
+        this.$message({
+          message: this.tmform.id ? '修改品牌成功' : '添加品牌成功',
+          type: 'success'
+        })
+        this.getPageList(this.tmform.id ? this.page : 1)
+      }, (error) => {
+        console.log(error)
+        return false
+      })
+    },
+    deleteTradeMark(row) {
+      console.log(row)
+      this.dialogFormVisible = false
+      this.$confirm(`此操作将永久删除${row.tmName}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        this.$API.trademark.reqDeleteTradeMark(row.id)
+        this.getPageList(this.list.length > 1 ? this.page : this.page - 1)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    }
+
+  },
+  // 组件挂在完毕
+  mounted() {
+    // 获取列表数据的方法
+    this.getPageList()
+  }
 
 }
 </script>

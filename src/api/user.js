@@ -4,8 +4,8 @@ export function login(data) {
   return request({
     url: '/acl/index/login',
     method: 'post',
-    data,
-  });
+    data
+  })
 };
 
 export function getInfo(token) {
