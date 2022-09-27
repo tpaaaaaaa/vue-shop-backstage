@@ -19,7 +19,10 @@ export default {
     ...mapGetters([
       'name'
     ])
-  }
+  },
+  mounted() {
+    this.$store.dispatch('home/getData');
+  },
 }
 </script>
 

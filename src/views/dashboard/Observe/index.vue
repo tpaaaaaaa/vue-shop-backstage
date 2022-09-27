@@ -21,5 +21,8 @@ export default {
 </script>
 
 <style scoped>
-
+/* div>>>.el-card__body {
+    box-sizing: border-box;
+    padding: 10px;
+} */
 </style>

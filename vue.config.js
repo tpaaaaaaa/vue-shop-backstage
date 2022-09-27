@@ -47,7 +47,7 @@ module.exports = {
         // pathRewrite: { '^/admin/product': '' },
       },
     },
-    // before: require('./mock/mock-server.js')
+    after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

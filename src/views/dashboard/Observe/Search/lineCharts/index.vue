@@ -35,6 +35,7 @@ export default {
             xAxis: {
                 show: false,
                 type: 'category',
+                boundaryGap: false
             },
             yAxis: {
                 show: false,
@@ -52,16 +53,19 @@ export default {
                             x2: 0,
                             y2: 1,
                             colorStops: [{
-                                offset: 0, color: 'purple' // 0% 处的颜色
+                                offset: 0, color: 'yellowgreen' // 0% 处的颜色
                             }, {
                                 offset: 1, color: 'white' // 100% 处的颜色
                             }],
                             global: false // 缺省为 false
                         }
                     },
-                    // smooth: true,
+                    smooth: true,
                     itemStyle: {
                         opacity: 0
+                    },
+                    grid: {
+                        left: 100,
                     }
                 }
             ],
