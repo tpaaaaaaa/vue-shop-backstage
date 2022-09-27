@@ -1,7 +1,7 @@
 <template >
     <div>
         <div class="header">
-            <span class="search-header">搜索用户数</span>
+            <span class="search-header">{{title}}</span>
             <svg
                  xmlns="http://www.w3.org/2000/svg"
                  fill="none"
@@ -30,47 +30,64 @@
 <script>
 export default {
     name: 'lineCharts',
-    mounted() {
-        this.$echarts.init(this.$refs.charts).setOption({
-            xAxis: {
-                show: false,
-                type: 'category',
-                boundaryGap: false
-            },
-            yAxis: {
-                show: false,
-            },
-            series: [
-                {
-                    type: 'line',
-                    data: [10, 40, 20, 30, 50, 5, 34],
-                    areaStyle: {
-                        color: {
-                            // 渐变颜色
-                            type: 'linear',
-                            x: 0,
-                            y: 0,
-                            x2: 0,
-                            y2: 1,
-                            colorStops: [{
-                                offset: 0, color: 'yellowgreen' // 0% 处的颜色
-                            }, {
-                                offset: 1, color: 'white' // 100% 处的颜色
-                            }],
-                            global: false // 缺省为 false
+    props: ['title', 'dataArray'],
+    data() {
+        return {
+            lineCharts: null
+        }
+    },
+    watch: {
+        dataArray() {
+            this.createLineCharts(this.dataArray);
+        }
+    },
+    methods: {
+        createLineCharts(data = []) {
+            this.lineCharts.setOption({
+                xAxis: {
+                    show: false,
+                    type: 'category',
+                    boundaryGap: false
+                },
+                yAxis: {
+                    show: false,
+                },
+                series: [
+                    {
+                        type: 'line',
+                        data: data,
+                        areaStyle: {
+                            color: {
+                                // 渐变颜色
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0, color: 'yellowgreen' // 0% 处的颜色
+                                }, {
+                                    offset: 1, color: 'white' // 100% 处的颜色
+                                }],
+                                global: false // 缺省为 false
+                            }
+                        },
+                        smooth: true,
+                        itemStyle: {
+                            opacity: 0
+                        },
+                        grid: {
+                            left: 100,
                         }
-                    },
-                    smooth: true,
-                    itemStyle: {
-                        opacity: 0
-                    },
-                    grid: {
-                        left: 100,
                     }
-                }
-            ],
+                ],
 
-        });
+            });
+        }
+    },
+    mounted() {
+        this.lineCharts = this.$echarts.init(this.$refs.charts)
+        this.createLineCharts(this.dataArray);
     },
 
 }

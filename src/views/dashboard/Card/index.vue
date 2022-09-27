@@ -3,36 +3,26 @@
         <el-row :gutter="10">
             <el-col :span="6">
                 <el-card>
-                    <CardDetail title="总销售额" count="123">
+                    <CardDetail title="总销售额"
+                                :count="new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY'}).format(list.payTotal)">
                         <template slot="charts">
-                            <span>周同比&nbsp;56.67%
-                                <svg
-xmlns="http://www.w3.org/2000/svg"
-viewBox="0 0 20 20"
-                                     fill="currentColor"
-class="w-5 h-5">
-                                    <path
-fill-rule="evenodd"
-                                          d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z"
-                                          clip-rule="evenodd" />
-                                </svg>
-                            </span>
-                            <span>日同比&nbsp;19.96%
-                                <svg
-xmlns="http://www.w3.org/2000/svg"
-viewBox="0 0 20 20"
-fill="currentColor"
-                                     class="w-5 h-5">
-                                    <path
-fill-rule="evenodd"
-                                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                          clip-rule="evenodd" />
-                                </svg>
+                            <div class="card-detail-text-rate">
+                                <span>
+                                    周同比&nbsp;{{transPrecent(list.salesGrowthLastMonth*0.01)}}
+                                    <i :class="`el-icon-caret-${list.salesGrowthLastMonth>0?'top':'bottom'}`"
+                                       :style="`color:${list.salesGrowthLastMonth>0?'greenyellow':'Red'}`"></i>
+                                </span>
+                                <span>
+                                    日同比&nbsp;{{transPrecent(list.salesGrowthLastDay*0.01)}}
+                                    <i :class="`el-icon-caret-${list.salesGrowthLastDay>0?'top':'bottom'}`"
+                                       :style="`color:${list.salesGrowthLastDay>0?'greenyellow':'Red'}`"></i>
+                                </span>
+                            </div>
 
-                            </span>
                         </template>
                         <template slot="footer">
-                            <span>日销售额￥123456</span>
+                            <span>日销售额{{new
+                            Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY'}).format(list.salesToday)}}</span>
                         </template>
                     </CardDetail>
 
@@ -40,13 +30,15 @@ fill-rule="evenodd"
             </el-col>
             <el-col :span="6">
                 <el-card>
-                    <CardDetail title="访问量" count="88460">
+                    <CardDetail title="访问量" :count="new Intl.NumberFormat().format(list.visitTotal)">
                         <template slot="charts">
-                            <lineChart></lineChart>
+                            <lineChart :visitTrend="list.visitTrend"></lineChart>
                         </template>
 
                         <template slot="footer">
-                            <span>日访问量23456</span>
+                            <span>日访问量
+                                {{new Intl.NumberFormat().format(list.visitToday)}}
+                            </span>
                         </template>
                     </CardDetail>
 
@@ -56,10 +48,10 @@ fill-rule="evenodd"
                 <el-card>
                     <CardDetail title="支付笔数" count="495464">
                         <template slot="charts">
-                            <barChart></barChart>
+                            <barChart :payTrend="this.list.payTrend"></barChart>
                         </template>
                         <template slot="footer">
-                            <span>转化率23%</span>
+                            <span>转化率{{transPrecent(list.payRate*0.01)}}</span>
                         </template>
                     </CardDetail>
 
@@ -69,32 +61,18 @@ fill-rule="evenodd"
                 <el-card>
                     <CardDetail title="运营活动效果" count="2253">
                         <template slot="charts">
-                            <progressCharts></progressCharts>
+                            <progressCharts :activityRate="list.activityRate"></progressCharts>
                         </template>
                         <template slot="footer">
-                            <span>周同比&nbsp;56.67%
-                                <svg
-xmlns="http://www.w3.org/2000/svg"
-viewBox="0 0 20 20"
-                                     fill="currentColor"
-class="w-5 h-5">
-                                    <path
-fill-rule="evenodd"
-                                          d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z"
-                                          clip-rule="evenodd" />
-                                </svg>
+                            <span>
+                                周同比&nbsp;{{transPrecent(list.activityGrowthLastMonth*0.01)}}
+                                <i :class="`el-icon-caret-${list.activityGrowthLastMonth>0?'top':'bottom'}`"
+                                   :style="`color:${list.activityGrowthLastMonth>0?'greenyellow':'Red'}`"></i>
                             </span>
-                            <span>日同比&nbsp;19.96%
-                                <svg
-xmlns="http://www.w3.org/2000/svg"
-viewBox="0 0 20 20"
-fill="currentColor"
-                                     class="w-5 h-5">
-                                    <path
-fill-rule="evenodd"
-                                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                                          clip-rule="evenodd" />
-                                </svg>
+                            <span>
+                                日同比&nbsp;{{transPrecent(list.activityGrowthLastDay*0.01)}}
+                                <i :class="`el-icon-caret-${list.activityGrowthLastDay>0?'top':'bottom'}`"
+                                   :style="`color:${list.activityGrowthLastDay>0?'greenyellow':'Red'}`"></i>
                             </span>
                         </template>
                     </CardDetail>
@@ -106,15 +84,29 @@ fill-rule="evenodd"
     </div>
 </template>
 <script>
-import CardDetail from './detail'
-import lineChart from './LineChart'
-import barChart from './barChart'
-import progressCharts from './progressCharts'
+import CardDetail from './detail';
+import lineChart from './LineChart';
+import barChart from './barChart';
+import progressCharts from './progressCharts';
+import { mapState } from 'vuex';
 export default {
-  name: 'CardComponent',
-  components: { CardDetail, lineChart, barChart, progressCharts }
+    name: 'CardComponent',
+    components: { CardDetail, lineChart, barChart, progressCharts },
+    computed: {
+        ...mapState('home', ['list']),
+    },
+    methods: {
+        transPrecent(value) {
+            return new Intl.NumberFormat('zh-CN', { style: 'percent', maximumFractionDigits: 2 }).format(value);
+        }
+    },
 }
 </script>
-<style >
+<style scoped>
+.card-detail-text-rate {
+    font-size: 14px;
+    position: absolute;
+    bottom: 10px;
 
+}
 </style>
