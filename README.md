@@ -1,6 +1,4 @@
-# vue-admin-template
-
-尚硅谷商城后台管理
+## 尚硅谷商城后台管理(基于vue-admin-template)
 
 ## Build Setup
 
