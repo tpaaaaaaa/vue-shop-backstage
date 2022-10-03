@@ -1,5 +1,8 @@
 import request from '@/utils/request';
 
+import qs from 'qs';
+
+
 // 用户API
 
 export function login(data) {
@@ -54,5 +57,34 @@ export function detailRole(userId) {
     return request({
         url: `${api_name}/toAssign/${userId}`,
         method: 'get',
+    });
+};
+
+// 给用户分配角色
+export function doAssign(userId, roleId) {
+    console.log('API：', userId, roleId);
+    return request({
+        url: `${api_name}/doAssign`,
+        method: 'post',
+        // params: { userId, roleId: qs.stringify(roleId, { arrayFormat: 'repeat' }) },
+        params: { userId, roleId: roleId.toString() },
+    });
+};
+
+// 批量删除用户
+export const batchRemove = function (idList) {
+    return request({
+        url: `${api_name}/batchRemove`,
+        method: 'delete',
+        data: idList,
+    });
+};
+
+// 修改用户
+export const update = function (data) {
+    return request({
+        url: `${api_name}/update`,
+        method: 'put',
+        data,
     });
 };
