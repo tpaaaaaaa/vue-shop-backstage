@@ -30,11 +30,12 @@ export default {
         return request({
             url: `${api_name}/save`,
             method: 'post',
+            data: role,
         });
     },
 
     // 删除角色
-    delete(role) {
+    delete(id) {
         return request({
             url: `${api_name}/remove/${id}`,
             method: 'delete',

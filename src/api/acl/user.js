@@ -39,6 +39,7 @@ export function getPageList(page, limit, username) {
 };
 
 export function save(data) {
+    console.log(data);
     return request({
         url: `${api_name}/save`,
         method: 'post',
@@ -62,7 +63,7 @@ export function detailRole(userId) {
 
 // 给用户分配角色
 export function doAssign(userId, roleId) {
-    console.log('API：', userId, roleId);
+    // console.log('API：', userId, roleId);
     return request({
         url: `${api_name}/doAssign`,
         method: 'post',

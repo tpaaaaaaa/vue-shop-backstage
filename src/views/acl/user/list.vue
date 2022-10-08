@@ -59,7 +59,7 @@
         </el-pagination>
 
         <!-- 添加用户 -->
-        <el-dialog title="添加用户" :visible.sync="dialogRoleVisible" @close="cancelAdd">
+        <el-dialog title="添加用户" :visible.sync="dialogRoleVisible" @closed="cancelAdd">
             <el-form :model="userInfo" ref="addRuleForm" label-width="80px" :rules="rules">
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="userInfo.username"></el-input>
@@ -79,7 +79,7 @@
         </el-dialog>
 
         <!-- 设置角色 -->
-        <el-dialog title="设置角色" :visible.sync="dialogDetailVisible" @close="cancelSetRolesForm">
+        <el-dialog title="设置角色" :visible.sync="dialogDetailVisible" @closed="cancelSetRolesForm">
             <el-form :model="detailInfo" label-width="80px" v-loading="setRoleLoading">
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="detailInfo.username" :disabled="true"></el-input>
@@ -110,7 +110,7 @@
         </el-dialog>
 
         <!-- 修改用户 -->
-        <el-dialog title="修改用户" :visible.sync="updateRoleLoading" @close="closeUpdateRolesForm">
+        <el-dialog title="修改用户" :visible.sync="updateRoleLoading" @closed="closeUpdateRolesForm">
             <el-form :model="detailInfo" label-width="80px">
                 <!-- v-loading="updateRoleLoading" -->
                 <el-form-item label="用户名" prop="username">
@@ -204,10 +204,6 @@ export default {
         checkedRolesIdList() {
             this.setRoleLoading = false;
         },
-        // selectUserList(){
-        //     if(this.selectUserList.length!==0)
-        //     this.
-        // }
     },
     methods: {
         // 获取角色数据
@@ -275,19 +271,18 @@ export default {
         // 添加用户确定按钮
         submitForm() {
             this.$refs.addRuleForm.validate(async (valid) => {
-                if (valid) {
-                    this.dialogRoleVisible = false;
-                    this.$message({ type: 'success', message: '添加成功' });
-                    const { userInfo } = this;
-                    const result = await this.$API.user.save(userInfo);
-                    if (result.code !== 200 && result.code !== 20000) return;
-                    // console.log(result);
-                    this.clearAddRolrForm();
-                    this.getRoleList();
-                } else {
-                    this.$message('请重新输入信息后再试');
-                    // return false;
-                }
+                if (!valid) return this.$message('请重新输入信息后再试');;
+                this.dialogRoleVisible = false;
+                this.$message({ type: 'success', message: '添加成功' });
+                const { userInfo } = this;
+
+                console.log(this.userInfo, userInfo);
+
+                const result = await this.$API.user.save(userInfo);
+                if (result.code !== 200 && result.code !== 20000) return;
+                // console.log(result);
+                this.getRoleList();
+                // this.clearAddRolrForm();
             });
         },
         // 取消添加用户

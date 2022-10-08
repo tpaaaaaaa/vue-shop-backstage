@@ -7,11 +7,11 @@
       rules：验证规则
      */ -->
     <el-form
-ref="loginForm"
-:model="loginForm"
-:rules="loginRules"
-class="login-form"
-auto-complete="on"
+             ref="loginForm"
+             :model="loginForm"
+             :rules="loginRules"
+             class="login-form"
+             auto-complete="on"
              label-position="left">
 
       <div class="title-container">
@@ -52,9 +52,9 @@ auto-complete="on"
       </el-form-item>
 
       <el-button
-:loading="loading"
-type="primary"
-style="width:100%;margin-bottom:30px;"
+                 :loading="loading"
+                 type="primary"
+                 style="width:100%;margin-bottom:30px;"
                  @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
@@ -93,8 +93,8 @@ export default {
         password: '111111'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur', message: '请输入用户名' }],
+        password: [{ required: true, trigger: 'blur', message: '请输入密码' }]
       },
       loading: false,
       passwordType: 'password',
@@ -103,7 +103,7 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         this.redirect = route.query && route.query.redirect
       },
       immediate: true

@@ -1,5 +1,6 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
+import store from '@/store';
 
 Vue.use(Router)
 
@@ -25,24 +26,20 @@ import Layout from '@/layout'
   }
  */
 
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
+
+/** 路由配置
+ * 常量路由：所有用户都看见 
+ *  --首页、登录、404
+ *
  */
 export const constantRoutes = [
+  // 登录
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
+  // 首页
   {
     path: '/',
     component: Layout,
@@ -50,11 +47,18 @@ export const constantRoutes = [
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
 
+];
+
+/**异步路由：不同的角色需要筛选路由显示
+ * 商品、权限管理
+ */
+export const asyncRoutes = [
+  // 商品管理
   {
     path: '/product',
     component: Layout,
@@ -87,8 +91,7 @@ export const constantRoutes = [
       }
     ]
   },
-
-
+  // 权限管理
   {
     name: 'Acl',
     path: '/acl',
@@ -123,6 +126,7 @@ export const constantRoutes = [
           activeMenu: '/acl/role/list',
           title: '角色授权',
         },
+        hidden: true,
       },
       {
         name: 'Permission',
@@ -132,14 +136,44 @@ export const constantRoutes = [
           title: '菜单管理',
         },
       },
+    ]
+  },
+  // 测试管理
+  {
+    name: 'Test',
+    path: '/test',
+    component: Layout,
+    meta: {
+      title: '测试管理',
+      icon: 'el-icon-goods'
+    },
+    children: [
+      {
+        name: 'Test1',
+        path: 'test1',
+        component: () => import('@/views/Test/Test1'),
+        meta: {
+          title: '测试管理1',
+        },
+      },
+      {
+        name: 'Test2',
+        path: 'test2',
+        component: () => import('@/views/Test/Test2'),
+        meta: {
+          title: '测试管理2',
+        },
+      },
 
     ]
-
   },
+];
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+/**任意路由
+ * --路径错误时重定向到404
+ * 404 page must be placed at the end !!!
+ */
+export const anyRoutes = { path: '*', redirect: '/404', hidden: true };
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -147,7 +181,26 @@ const createRouter = () => new Router({
   routes: constantRoutes
 })
 
+
 const router = createRouter()
+
+// router.beforeEach((to, from, next) => {
+//   const { isResultRoutes } = store.state.user;
+//   if (isResultRoutes) return next();
+//   console.log(router);
+
+
+//   router.matcher = new Router({ mode: 'history' }).matcher;
+
+//   const allRoutes = JSON.parse(sessionStorage.getItem('allRoutes'));
+
+
+//   if (!isResultRoutes)
+//     router.addRoutes([...allRoutes]);
+
+//   next();
+// });
+
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {

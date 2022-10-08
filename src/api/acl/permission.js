@@ -18,7 +18,7 @@ export default {
     removePermission(id) {
         return request({
             url: `${api_name}/remove/${id}`,
-            method: 'post',
+            method: 'delete',
         });
     },
 
@@ -34,7 +34,7 @@ export default {
     // 更改一个权限项
     updatePermission(permission) {
         return request({
-            url: `${permission}/update`,
+            url: `${api_name}/update`,
             method: 'put',
             data: permission,
         });
@@ -45,7 +45,7 @@ export default {
         return request({
             url: `${api_name}/doAssign`,
             method: 'post',
-            params: { roleId, permissionId }
+            params: { roleId, permissionId: permissionId }
         });
     },
 
