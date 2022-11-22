@@ -1,19 +1,19 @@
 // 登录相关接口函数
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo } from "@/api/user";
 // token相关函数
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken } from "@/utils/auth";
 // 路由中充值路由的方法
-import { anyRoutes, resetRouter, asyncRoutes, constantRoutes, } from '@/router'
-import router from '@/router';
+import { anyRoutes, resetRouter, asyncRoutes, constantRoutes } from "@/router";
+import router from "@/router";
 
 const getDefaultState = () => {
   return {
     // 获取token
     token: getToken(),
     // 存储用户名
-    name: '',
+    name: "",
     // 用户头像
-    avatar: '',
+    avatar: "",
     // 服务器返回菜单信息
     routes: [],
     // 角色信息
@@ -24,7 +24,7 @@ const getDefaultState = () => {
     resultAsyncRoutes: [],
     resultAllRoutes: [],
     isResultRoutes: false,
-  }
+  };
 };
 
 // 对比数组,计算出需要的异步路由
@@ -33,20 +33,19 @@ const calcAsyncRoutes = (asyncRoutes, routes) => {
     if (routes.indexOf(item.name) === -1) return false;
 
     if (item.children && item.children.length > 0)
-      calcAsyncRoutes(item.children, routes)
+      calcAsyncRoutes(item.children, routes);
     return true;
+  });
+};
 
-  })
-}
-
-const state = getDefaultState()
+const state = getDefaultState();
 
 const mutations = {
   RESET_STATE: (state) => {
-    Object.assign(state, getDefaultState())
+    Object.assign(state, getDefaultState());
   },
   SET_TOKEN: (state, token) => {
-    state.token = token
+    state.token = token;
   },
 
   // 存储用户信息
@@ -62,71 +61,75 @@ const mutations = {
   SET_RESULTASYNVROUTES(state, asynvRoutes) {
     // vuex保存的路由
     state.resultAsyncRoutes = asynvRoutes;
-    state.resultAllRoutes = constantRoutes.concat(anyRoutes, state.resultAsyncRoutes);
+    state.resultAllRoutes = constantRoutes.concat(
+      anyRoutes,
+      state.resultAsyncRoutes
+    );
     // 【刷新页面vuex丢失状态，会导致页面白屏】将动态路由配置存入会话中，避免状态丢失
-    sessionStorage.setItem('allRoutes', JSON.stringify(state.resultAllRoutes));
+    sessionStorage.setItem("allRoutes", JSON.stringify(state.resultAllRoutes));
+
     // 更改路由器
     router.addRoutes(state.resultAllRoutes);
     this.isResultRoutes = true;
-  }
-}
+  },
+};
 
 const actions = {
   // user login
   async login({ commit }, userInfo) {
     // 解构用户名和密码
-    const { username, password } = userInfo
+    const { username, password } = userInfo;
 
-    const result = await login({ username: username.trim(), password: password })
+    const result = await login({
+      username: username.trim(),
+      password: password,
+    });
     // 失败
-    if (result.code !== 20000) return Promise.reject(new Error('fail'))
-    commit('SET_TOKEN', result.data.token)
-    setToken(result.data.token)
-    return 'ok'
+    if (result.code !== 20000) return Promise.reject(new Error("fail"));
+    commit("SET_TOKEN", result.data.token);
+    setToken(result.data.token);
+    return "ok";
   },
 
   // 获取用户信息
   async getInfo({ commit, state }) {
-    const result = await getInfo(state.token)
+    const result = await getInfo(state.token);
 
-    if (result.code !== 20000) return Promise(new Error('fail'))
+    if (result.code !== 20000) return Promise(new Error("fail"));
     const { data } = result;
-    if (!data) return Promise(new Error('获取数据失败，请重新再试'))
+    if (!data) return Promise(new Error("获取数据失败，请重新再试"));
     // 返回数组包含：用户名、用户头像、routes【返回的标志】、role用户角色、button按钮权限
     // vuex存储用户全部信息
-    commit('SET_USERINFO', data);
-    commit('SET_RESULTASYNVROUTES', calcAsyncRoutes(asyncRoutes, data.routes))
+    commit("SET_USERINFO", data);
+    commit("SET_RESULTASYNVROUTES", calcAsyncRoutes(asyncRoutes, data.routes));
 
-    return 'ok'
+    return "ok";
   },
-
-
 
   // user logout
   async logout({ commit, state }) {
-    const result = await logout(state.token)
-    if (result.code !== 20000) return Promise(new Error('fail'))
+    const result = await logout(state.token);
+    if (result.code !== 20000) return Promise(new Error("fail"));
 
-    removeToken() // 必须先移除token
-    resetRouter()
-    commit('RESET_STATE')
-    return 'ok'
+    removeToken(); // 必须先移除token
+    resetRouter();
+    commit("RESET_STATE");
+    return "ok";
   },
 
   // remove token
   resetToken({ commit }) {
-    return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
-      resolve()
-    })
-  }
-}
+    return new Promise((resolve) => {
+      removeToken(); // must remove  token  first
+      commit("RESET_STATE");
+      resolve();
+    });
+  },
+};
 
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
-}
-
+  actions,
+};

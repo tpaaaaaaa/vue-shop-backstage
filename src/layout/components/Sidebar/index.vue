@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'has-logo':showLogo}">
+  <div :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Logo from './Logo'
-import SidebarItem from './SidebarItem'
-import variables from '@/styles/variables.scss'
+import { mapGetters } from 'vuex';
+import Logo from './Logo';
+import SidebarItem from './SidebarItem';
+import variables from '@/styles/variables.scss';
 
 export default {
   components: { SidebarItem, Logo },
@@ -31,29 +31,31 @@ export default {
     ]),
     routes() {
       // 由$router改为$store里获取当前用户能访问的菜单【弊端：刷新页面vuex丢失状态，会导致页面白屏】
+      // if (sessionStorage.getItem("allRoutes"))
+      //   return JSON.parse(sessionStorage.getItem("allRoutes"));
       return this.$store.state.user.resultAllRoutes;
       // 从会话中获取动态路由
       // return JSON.parse(sessionStorage.getItem('allRoutes'));
 
     },
     activeMenu() {
-      const route = this.$route
-      const { meta, path } = route
+      const route = this.$route;
+      const { meta, path } = route;
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
-        return meta.activeMenu
+        return meta.activeMenu;
       }
-      return path
+      return path;
     },
     showLogo() {
-      return this.$store.state.settings.sidebarLogo
+      return this.$store.state.settings.sidebarLogo;
     },
     variables() {
-      return variables
+      return variables;
     },
     isCollapse() {
-      return !this.sidebar.opened
+      return !this.sidebar.opened;
     }
   }
-}
+};
 </script>
