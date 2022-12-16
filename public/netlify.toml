@@ -1,0 +1,24 @@
+[[redirects]]
+  from = "/admin/acl"
+  to = "http://39.98.123.211:8170"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/acl"
+  to = "http://39.98.123.211:8170"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/admin/production"
+  to = "http://39.98.123.211:8510"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/production"
+  to = "http://39.98.123.211:8510"
+  status = 200
+  force = true
+
