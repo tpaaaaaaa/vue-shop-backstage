@@ -1,0 +1,10 @@
+[[redirects]]
+    from="/api"
+    to="http://39.98.123.211:8170"
+    force=true
+    headers = {X-From = "Netlify"}
+[[redirects]]
+    from="/product"
+    to="http://39.98.123.211:8510"
+    force=true
+    headers = {X-From = "Netlify"}
