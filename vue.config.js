@@ -8,7 +8,7 @@ function resolve(dir) {
 
 const name = defaultSettings.title || "vue Admin Template"; // page title
 
-// If your port is set to 80,
+// If your port is set to 80,3
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following methods:
