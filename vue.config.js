@@ -37,16 +37,16 @@ module.exports = {
       errors: true,
     },
     // 配置代理跨域
-    proxy: {
-      "/acl": {
-        target: "http://39.98.123.211:8170",
-        pathRewrite: { "^/acl": "" },
-      },
-      product: {
-        target: "http://39.98.123.211:8510",
-        // pathRewrite: { '^/admin/product': '' },
-      },
-    },
+    // proxy: {
+    //   "/acl": {
+    //     target: "http://39.98.123.211:8170",
+    //     pathRewrite: { "^/acl": "" },
+    //   },
+    //   product: {
+    //     target: "http://39.98.123.211:8510",
+    //     // pathRewrite: { '^/admin/product': '' },
+    //   },
+    // },
     after: require("./mock/mock-server.js"),
   },
   configureWebpack: {

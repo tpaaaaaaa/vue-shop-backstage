@@ -5,7 +5,7 @@ const baseURL = "http://39.98.123.211:8170/admin";
 
 export function login(data) {
   return request({
-    url: "/acl/index/login",
+    url: baseURL + "/acl/index/login",
     method: "post",
     data,
   });
@@ -13,7 +13,7 @@ export function login(data) {
 
 export function getInfo() {
   return request({
-    url: "/acl/index/info",
+    url: baseURL + "/acl/index/info",
     method: "get",
   });
 }
