@@ -1,6 +1,6 @@
 # 从浏览器请求重定向到我们服务的内容
 
-/admin/acl http://39.98.123.211:8170
-/admin/production http://39.98.123.211:8510
-/acl http://39.98.123.211:8170
-/production http://39.98.123.211:8510
+/admin/acl/* http://39.98.123.211:8170 200
+/admin/production/* http://39.98.123.211:8510 200
+/acl/* http://39.98.123.211:8170/admin 200
+/production/* http://39.98.123.211:8510/admin 200
